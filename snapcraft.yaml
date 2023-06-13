@@ -21,7 +21,7 @@ apps:
     extensions: [gnome]
     common-id: org.thonny.Thonny
     environment:
-            THONNY_USER_DIR: $SNAP_USER_DATA
+      THONNY_USER_DIR: $SNAP_USER_DATA
     plugs:
       - home
       - network
