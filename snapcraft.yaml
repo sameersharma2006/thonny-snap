@@ -67,7 +67,7 @@ parts:
       # evil hack around some newer lib versions
       cd $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/
       ln -sf libffi.so.7 libffi.so.6
-      # ln -sf libgdbm.so.6 libgdbm.so.3
+      ln -sf libgdbm.so.6 libgdbm.so.3
       ln -sf libgdbm.so.6 libgdbm.so.5
       ln -sf libgdbm_compat.so.4 libgdbm_compat.so.3
       cd $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET/
@@ -92,8 +92,17 @@ parts:
       - libxrender1
       - udisks2
       - python3-dbus
+    prime:
+      - -lib/$CRAFT_ARCH_TRIPLET/libhistory.so*
+      - -lib/$CRAFT_ARCH_TRIPLET/libtinfo.so*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_fs.so* 
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_loop.so* 
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_part.so*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_swap.so*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libformw.so*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libmenuw.so*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libtic.so*
       
-  
   zenity:
     source: https://gitlab.gnome.org/GNOME/zenity.git
     source-tag: 3.44.1
