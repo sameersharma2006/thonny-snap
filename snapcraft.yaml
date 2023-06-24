@@ -62,25 +62,12 @@ parts:
       VER="$(git describe --tags --abbrev=0 | cut -c 2-)"
       wget -q -O- https://github.com/thonny/thonny/releases/download/v${VER}/thonny-${VER}-x86_64.tar.gz |\
            tar xzf - --strip-components=1 -C $CRAFT_PART_SRC
-    override-build: |
-      craftctl default
-      # evil hack around some newer lib versions
-      cd $CRAFT_PART_INSTALL/usr/lib/$CRAFT_ARCH_TRIPLET/
-      ln -sf libffi.so.7 libffi.so.6
-      ln -sf libgdbm.so.6 libgdbm.so.3
-      ln -sf libgdbm.so.6 libgdbm.so.5
-      ln -sf libgdbm_compat.so.4 libgdbm_compat.so.3
-      cd $CRAFT_PART_INSTALL/lib/$CRAFT_ARCH_TRIPLET/
-      ln -sf libreadline.so.8 libreadline.so.6
-      ln -sf libreadline.so.8 libreadline.so.7
-      ln -sf libtinfo.so.6 libtinfo.so.5
     stage-packages:
       - libncursesw5
-      - libtinfo6
+      - libtinfo5
       - libgdbm6
-      - libgdbm-compat4
       - libreadline8
-      - libffi7
+      - libffi8
       - libfreetype6
       - libfontconfig1
       - libpng16-16
@@ -102,7 +89,9 @@ parts:
       - -usr/lib/$CRAFT_ARCH_TRIPLET/libformw.so*
       - -usr/lib/$CRAFT_ARCH_TRIPLET/libmenuw.so*
       - -usr/lib/$CRAFT_ARCH_TRIPLET/libtic.so*
-      
+      - -lib/$CRAFT_ARCH_TRIPLET/libparted-fs-resize.so*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_part_err.so*
+      - -usr/lib/$CRAFT_ARCH_TRIPLET/libpanelw.so*
   zenity:
     source: https://gitlab.gnome.org/GNOME/zenity.git
     source-tag: 3.44.1
