@@ -5,9 +5,9 @@ grade: stable
 confinement: strict
 compression: lzo
 architectures:
-  - build-on: amd64
-  - build-on: arm64
-  - build-on: armhf
+  - build-for: amd64
+  - build-for: arm64
+  - build-for: armhf
 
 slots:
   thonny:
