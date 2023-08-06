@@ -71,18 +71,16 @@ parts:
       - -lib/$SNAPCRAFT_ARCH_TRIPLET/libparted-fs-resize.so*
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_part_err.so*
       - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpanelw.so*
-  
-  
+    
   zenity:
     after: [thonny]
     source: https://gitlab.gnome.org/GNOME/zenity.git
-    source-tag: 'ZENITY_3_32_0'
+    source-tag: '3.42.1'
     plugin: meson
-    meson-version: 1.2.0
+    meson-version: 0.61.5
     meson-parameters:
       - --prefix=/usr
-      - --buildtype=release
-    
+      
   fatloss:
     after: [zenity]
     plugin: nil 
