@@ -55,7 +55,7 @@ parts:
     stage-packages:
       - zenity  
     override-pull: |
-      snapcraftctl default
+      snapcraftctl pull
       snapcraftctl set-version $(git describe --tags --abbrev=0 | cut -c 2-)
       VER="$(git describe --tags --abbrev=0 | cut -c 2-)"
       wget -q -O- https://github.com/thonny/thonny/releases/download/v${VER}/thonny-${VER}-x86_64.tar.gz |\
@@ -78,7 +78,7 @@ parts:
     after: [thonny]
     plugin: nil 
     override-prime: |
-      snapcraftctl default
+      snapcraftctl prime
       rm -rf usr/share/locale
       rm -rf usr/share/help
       rm -rf usr/share/doc
