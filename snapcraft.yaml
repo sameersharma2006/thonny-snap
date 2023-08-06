@@ -75,11 +75,11 @@ parts:
   zenity:
     after: [thonny]
     source: https://gitlab.gnome.org/GNOME/zenity.git
-    source-tag: '3.42.1'
+    source-tag: 3.41.0
     plugin: meson
     meson-version: 0.61.5
     meson-parameters:
-      - --prefix=/usr
+      - -Dprefix=/usr
       
   fatloss:
     after: [zenity]
