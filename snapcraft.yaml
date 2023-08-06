@@ -1,5 +1,5 @@
 name: thonny
-base: core18
+base: core20
 adopt-info: thonny
 grade: stable
 confinement: strict
@@ -7,6 +7,7 @@ compression: lzo
 architectures:
   - build-on: amd64
   - build-on: arm64
+  - build-on: armhf
   
 slots:
   thonny:
@@ -17,7 +18,7 @@ slots:
 apps:
   thonny:
     command: bin/thonny
-    extensions: [gnome-3-34]
+    extensions: [gnome-3-38]
     common-id: org.thonny.Thonny
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
@@ -92,10 +93,10 @@ parts:
   cleanup:
     after: [fatloss]
     plugin: nil
-    build-snaps: [core18, gtk-common-themes, gnome-3-34-1804]
+    build-snaps: [core20, gtk-common-themes, gnome-3-38-2004]
     override-prime: |
       set -eux
-      for snap in "core18" "gtk-common-themes" "gnome-3-34-1804"; do
+      for snap in "core20" "gtk-common-themes" "gnome-3-38-2004"; do
         cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
       done    
  
