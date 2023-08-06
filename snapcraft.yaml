@@ -1,13 +1,13 @@
 name: thonny
-base: core22
+base: core18
 adopt-info: thonny
 grade: stable
 confinement: strict
 compression: lzo
 architectures:
   - build-on: amd64
-  - build-on: arm64
-  - build-on: armhf
+  #- build-on: arm64
+  #- build-on: armhf
 
 slots:
   thonny:
@@ -18,7 +18,7 @@ slots:
 apps:
   thonny:
     command: bin/thonny
-    extensions: [gnome]
+    extensions: [gnome-3-34]
     common-id: org.thonny.Thonny
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
@@ -50,64 +50,53 @@ parts:
   thonny:
     source: https://github.com/thonny/thonny.git
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
-    after: [zenity]
     plugin: dump
     build-packages:
       - wget
-      - curl
-      - build-essential
+    stage-packages:
+      - zenity  
     override-pull: |
-      craftctl default
-      craftctl set version=$(git describe --tags --abbrev=0 | cut -c 2-)
+      snapcraftctl default
+      snapcraftctl set-version $(git describe --tags --abbrev=0 | cut -c 2-)
       VER="$(git describe --tags --abbrev=0 | cut -c 2-)"
       wget -q -O- https://github.com/thonny/thonny/releases/download/v${VER}/thonny-${VER}-x86_64.tar.gz |\
-           tar xzf - --strip-components=1 -C $CRAFT_PART_SRC
-    stage-packages:
-      - libncursesw5
-      - libtinfo5
-      - libgdbm6
-      - libreadline8
-      - libffi8
-      - libfreetype6
-      - libfontconfig1
-      - libpng16-16
-      - libx11-6
-      - libxau6
-      - libxcb1
-      - libxdmcp6
-      - libxft2
-      - libxrender1
-      - udisks2
-      - python3-dbus
+           tar xzf - --strip-components=1 -C $SNAPCRAFT_PART_SRC
     prime:
-      - -lib/$CRAFT_ARCH_TRIPLET/libhistory.so*
-      - -lib/$CRAFT_ARCH_TRIPLET/libtinfo.so*
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_fs.so* 
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_loop.so* 
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_part.so*
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_swap.so*
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libformw.so*
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libmenuw.so*
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libtic.so*
-      - -lib/$CRAFT_ARCH_TRIPLET/libparted-fs-resize.so*
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libbd_part_err.so*
-      - -usr/lib/$CRAFT_ARCH_TRIPLET/libpanelw.so*
-  zenity:
-    source: https://gitlab.gnome.org/GNOME/zenity.git
-    source-tag: 3.44.1
-    plugin: meson
-    meson-parameters:
-      - -Dprefix=/usr
-    build-packages:
-      - build-essential
-  
-  cleanup:
+      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libhistory.so*
+      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libtinfo.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_fs.so* 
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_loop.so* 
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_part.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_swap.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libformw.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmenuw.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libtic.so*
+      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libparted-fs-resize.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_part_err.so*
+      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpanelw.so*
+ 
+  fatloss:
     after: [thonny]
+    plugin: nil 
+    override-prime: |
+      snapcraftctl default
+      rm -rf usr/share/locale
+      rm -rf usr/share/help
+      rm -rf usr/share/doc
+      rm -rf usr/share/fonts
+      rm -rf usr/share/man
+      rm -rf include
+      rm -rf packaging/mac
+      rm -rf packaging/windows
+      rm -rf packaging/setuptools
+       
+  cleanup:
+    after: [fatloss]
     plugin: nil
-    build-snaps: [core22, gtk-common-themes, gnome-42-2204]
+    build-snaps: [core18, gtk-common-themes, gnome-3-34-1804]
     override-prime: |
       set -eux
-      for snap in "core22" "gtk-common-themes" "gnome-42-2204"; do
-        cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$CRAFT_PRIME/{}" \;
+      for snap in "core18" "gtk-common-themes" "gnome-3-34-1804"; do
+        cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
       done    
  
