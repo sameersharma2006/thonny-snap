@@ -116,6 +116,7 @@ parts:
     after: [zenity] 
     source: https://github.com/astrand/xclip/archive/refs/tags/0.13.tar.gz
     plugin: autotools
+    install-via: 'prefix'
     configflags:
       - --prefix=/usr
     build-packages:
