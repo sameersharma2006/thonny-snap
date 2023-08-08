@@ -66,13 +66,23 @@ parts:
       - -data
       - -docs
       - -licenses
-      - -packaging/license*
       - -packaging/pip*
       - -packaging/portable*
       - -packaging/readme*
       - -packaging/requirements*
       - -packaging/icons/preview*
       - -packaging/license*
+      - -packaging/linux/build*
+      - -packaging/linux/install*
+      - -packaging/linux/create*
+      - -packaging/linux/insert*
+      - -packaging/linux/downinstall*
+      - -packaging/linux/uninstall*
+      - -packaging/linux/readme*
+      - -packaging/linux/README*
+      - -packaging/linux/thonny*
+      - -packaging/linux/Thonny*
+      - -packaging/linux/org.thonny.Thonny.Devel.yaml
       - -build*
       - -copy*
       - -MANIFEST*
@@ -83,7 +93,9 @@ parts:
       - -CHANGELOG*
       - -mypy*
       - -pyproject*
-      - -install*         
+      - -install*
+      - -CREDITS*
+      - -setup*         
    
   zenity:
     after: [thonny]
