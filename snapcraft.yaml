@@ -123,7 +123,7 @@ parts:
     build-packages:
       - libxmu-dev
       - libxmu-headers  
-    prime:
+    stage:
       - -usr/share/locale
       - -usr/share/help
       - -usr/share/doc
