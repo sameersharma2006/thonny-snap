@@ -6,7 +6,7 @@ confinement: strict
 compression: lzo
 architectures:
   - build-on: amd64
-  
+   
 slots:
   thonny:
     interface: dbus
@@ -28,7 +28,6 @@ apps:
       - audio-playback
       - audio-record
       - bluez
-      - avahi-control
       - avahi-observe
       - bluetooth-control
       - camera
@@ -58,21 +57,13 @@ parts:
            tar xzf - --strip-components=1 -C $SNAPCRAFT_PART_SRC
     override-prime: |
       snapcraftctl prime
-      sed -e 's|Icon=thonny|Icon=${SNAP}/packaging/icons/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop         
-    prime:
-      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libhistory.so*
-      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libtinfo.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_fs.so* 
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_loop.so* 
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_part.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_swap.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libformw.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmenuw.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libtic.so*
-      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libparted-fs-resize.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_part_err.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpanelw.so*
-    
+      sed -e 's|Icon=thonny|Icon=${SNAP}/packaging/icons/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop 
+    stage:
+      - -packaging/setuptools
+      - -packaging/mac
+      - -packaging/windows
+      - -include          
+   
   zenity:
     after: [thonny]
     source: https://gitlab.gnome.org/GNOME/zenity.git
@@ -81,24 +72,15 @@ parts:
     meson-version: 0.61.5
     meson-parameters:
       - -Dprefix=/usr
-      
-  fatloss:
-    after: [zenity]
-    plugin: nil 
-    override-prime: |
-      snapcraftctl prime
-      rm -rf usr/share/locale
-      rm -rf usr/share/help
-      rm -rf usr/share/doc
-      rm -rf usr/share/fonts
-      rm -rf usr/share/man
-      rm -rf include
-      rm -rf packaging/mac
-      rm -rf packaging/windows
-      rm -rf packaging/setuptools
-       
+    stage:
+      - -usr/share/locale
+      - -usr/share/help
+      - -usr/share/doc
+      - -usr/share/fonts
+      - -usr/share/man
+    
   cleanup:
-    after: [fatloss]
+    after: [zenity]
     plugin: nil
     build-snaps: [core18, gtk-common-themes, gnome-3-34-1804]
     override-prime: |
