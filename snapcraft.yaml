@@ -111,9 +111,29 @@ parts:
       - -usr/share/doc
       - -usr/share/fonts
       - -usr/share/man
-    
+  
+  xclip: # Building xclip for proper working of kivy inside thonny-snap confinement.
+    after: [zenity] 
+    source: https://github.com/astrand/xclip.git
+    source-tag: '0.13'
+    plugin: autotools
+    install-via: 'prefix'
+    configflags:
+      - --prefix=/usr
+    build-packages:
+      - libxmu-dev
+      - libxmu-headers  
+    prime:
+      - -usr/share/locale
+      - -usr/share/help
+      - -usr/share/doc
+      - -usr/share/fonts
+      - -usr/share/man
+      - -usr/include
+      - -share
+      
   cleanup:
-    after: [zenity]
+    after: [xclip]
     plugin: nil
     build-snaps: [core18, gtk-common-themes, gnome-3-34-1804]
     override-prime: |
