@@ -59,7 +59,31 @@ parts:
       - -packaging/setuptools
       - -packaging/mac
       - -packaging/windows
-      - -include          
+      - -include 
+      - -thonny
+      - -misc
+      - -templates
+      - -data
+      - -docs
+      - -licenses
+      - -packaging/license*
+      - -packaging/pip*
+      - -packaging/portable*
+      - -packaging/readme*
+      - -packaging/requirements*
+      - -packaging/icons/preview*
+      - -packaging/license*
+      - -build*
+      - -copy*
+      - -MANIFEST*
+      - -CONTRIBUTING*
+      - -requirements*
+      - -README*
+      - -LICENSE*
+      - -CHANGELOG*
+      - -mypy*
+      - -pyproject*
+      - -install*         
    
   zenity:
     after: [thonny]
