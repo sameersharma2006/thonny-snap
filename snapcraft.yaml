@@ -22,25 +22,22 @@ apps:
       THONNY_USER_DIR: $SNAP_USER_DATA
     plugs:
       - home
+      - unity7
       - network
       - network-bind
       - network-status
       - audio-playback
       - audio-record
       - bluez
-      - avahi-observe
-      - bluetooth-control
       - camera
       - hardware-observe
       - system-observe
-      - process-control
+      - upower-observe
       - optical-drive
       - raw-usb
-      - removable-media
-      - unity7
-      - screen-inhibit-control
       - udisks2
-      - upower-observe
+      - removable-media
+      - screen-inhibit-control
     desktop: packaging/linux/org.thonny.Thonny.desktop   
 
 parts:
