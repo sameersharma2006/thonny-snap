@@ -114,11 +114,10 @@ parts:
   
   xclip: 
     after: [zenity] 
-    source: https://github.com/astrand/xclip/archive/refs/tags/0.13.tar.gz
+    source: https://github.com/astrand/xclip.git
+    source-tag: '0.13'
     plugin: autotools
     install-via: 'prefix'
-    configflags:
-      - --prefix=/usr
     build-packages:
       - libxmu-dev
       - libxmu-headers  
