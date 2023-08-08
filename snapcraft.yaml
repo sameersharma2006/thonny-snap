@@ -112,10 +112,9 @@ parts:
       - -usr/share/fonts
       - -usr/share/man
   
-  xclip: # Building xclip for proper working of kivy inside thonny-snap confinement.
+  xclip: 
     after: [zenity] 
-    source: https://github.com/astrand/xclip.git
-    source-tag: '0.13'
+    source: https://github.com/astrand/xclip/archive/refs/tags/0.13.tar.gz
     plugin: autotools
     install-via: 'prefix'
     configflags:
