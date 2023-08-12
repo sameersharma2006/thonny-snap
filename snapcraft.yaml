@@ -97,7 +97,7 @@ parts:
       - -CREDITS*
       - -setup*         
    
-  zenity:
+  zenity: # For accessing gtk-file-portal by thonny.
     after: [thonny]
     source: https://gitlab.gnome.org/GNOME/zenity.git
     source-tag: 3.41.0
@@ -112,7 +112,7 @@ parts:
       - -usr/share/fonts
       - -usr/share/man
   
-  xclip: 
+  xclip:  # For proper working of Kivy inside the sandbox.
     after: [zenity] 
     source: https://github.com/astrand/xclip.git
     source-tag: '0.13'
@@ -129,9 +129,17 @@ parts:
       - -usr/share/man
       - -usr/include
       - -share
-      
-  cleanup:
+  
+  sundry-deps: # For sundry reasons.
     after: [xclip]
+    plugin: nil  
+    stage-packages:
+      - libnotify-bin
+    prime:
+      - usr/bin/notify*
+       
+  cleanup:
+    after: [sundry-deps]
     plugin: nil
     build-snaps: [core18, gtk-common-themes, gnome-3-34-1804]
     override-prime: |
