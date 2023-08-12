@@ -6,9 +6,7 @@ confinement: strict
 compression: lzo
 architectures:
   - build-on: amd64
-  - build-on: arm64
-  - build-on: armhf
-  
+   
 slots:
   thonny:
     interface: dbus
@@ -24,26 +22,22 @@ apps:
       THONNY_USER_DIR: $SNAP_USER_DATA
     plugs:
       - home
+      - unity7
       - network
       - network-bind
       - network-status
       - audio-playback
       - audio-record
       - bluez
-      - avahi-control
-      - avahi-observe
-      - bluetooth-control
       - camera
       - hardware-observe
       - system-observe
-      - process-control
+      - upower-observe
       - optical-drive
       - raw-usb
-      - removable-media
-      - unity7
-      - screen-inhibit-control
       - udisks2
-      - upower-observe
+      - removable-media
+      - screen-inhibit-control
     desktop: packaging/linux/org.thonny.Thonny.desktop   
 
 parts:
@@ -53,45 +47,83 @@ parts:
     plugin: dump
     build-packages:
       - wget
-    stage-packages:
-      - zenity  
     override-pull: |
-      snapcraftctl default
-      snapcraftctl set-version $(git describe --tags --abbrev=0 | cut -c 2-)
+      snapcraftctl pull
       VER="$(git describe --tags --abbrev=0 | cut -c 2-)"
       wget -q -O- https://github.com/thonny/thonny/releases/download/v${VER}/thonny-${VER}-x86_64.tar.gz |\
            tar xzf - --strip-components=1 -C $SNAPCRAFT_PART_SRC
-    prime:
-      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libhistory.so*
-      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libtinfo.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_fs.so* 
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_loop.so* 
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_part.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_swap.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libformw.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libmenuw.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libtic.so*
-      - -lib/$SNAPCRAFT_ARCH_TRIPLET/libparted-fs-resize.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libbd_part_err.so*
-      - -usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libpanelw.so*
- 
-  fatloss:
-    after: [thonny]
-    plugin: nil 
     override-prime: |
-      snapcraftctl default
-      rm -rf usr/share/locale
-      rm -rf usr/share/help
-      rm -rf usr/share/doc
-      rm -rf usr/share/fonts
-      rm -rf usr/share/man
-      rm -rf include
-      rm -rf packaging/mac
-      rm -rf packaging/windows
-      rm -rf packaging/setuptools
+      snapcraftctl prime
+      sed -e 's|Icon=thonny|Icon=${SNAP}/packaging/icons/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop 
+    stage:
+      - -packaging/setuptools
+      - -packaging/mac
+      - -packaging/windows
+      - -include 
+      - -thonny
+      - -misc
+      - -templates
+      - -data
+      - -docs
+      - -licenses
+      - -packaging/pip*
+      - -packaging/portable*
+      - -packaging/readme*
+      - -packaging/requirements*
+      - -packaging/icons/preview*
+      - -packaging/license*
+      - -packaging/linux/build*
+      - -packaging/linux/install*
+      - -packaging/linux/create*
+      - -packaging/linux/insert*
+      - -packaging/linux/downinstall*
+      - -packaging/linux/uninstall*
+      - -packaging/linux/readme*
+      - -packaging/linux/README*
+      - -packaging/linux/thonny*
+      - -packaging/linux/Thonny*
+      - -packaging/linux/org.thonny.Thonny.Devel.yaml
+      - -build*
+      - -copy*
+      - -MANIFEST*
+      - -CONTRIBUTING*
+      - -requirements*
+      - -README*
+      - -LICENSE*
+      - -CHANGELOG*
+      - -mypy*
+      - -pyproject*
+      - -install*
+      - -CREDITS*
+      - -setup*         
+   
+  zenity: # For accessing gtk-file-portal by thonny.
+    after: [thonny]
+    source: https://gitlab.gnome.org/GNOME/zenity.git
+    source-tag: 3.42.1
+    plugin: meson
+    meson-version: 1.2.1
+    meson-parameters:
+      - -Dprefix=/usr
+    stage:
+      - -usr/share/locale
+      - -usr/share/help
+      - -usr/share/doc
+      - -usr/share/fonts
+      - -usr/share/man
+  
+  sundry-deps: # For sundry reasons.
+    after: [zenity]
+    plugin: nil  
+    stage-packages:
+      - libnotify-bin
+      - xclip
+    prime:
+      - usr/bin/notify*
+      - usr/bin/xclip*
        
   cleanup:
-    after: [fatloss]
+    after: [sundry-deps]
     plugin: nil
     build-snaps: [core20, gtk-common-themes, gnome-3-38-2004]
     override-prime: |
