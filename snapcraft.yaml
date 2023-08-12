@@ -117,7 +117,8 @@ parts:
     source: https://github.com/astrand/xclip.git
     source-tag: '0.13'
     plugin: autotools
-    install-via: 'prefix'
+    configflags:
+      - --prefix=/usr
     build-packages:
       - libxmu-dev
       - libxmu-headers  
