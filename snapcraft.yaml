@@ -34,7 +34,7 @@ apps:
       - camera
       - hardware-observe
       - system-observe
-      - process-control
+      - mount-observe
       - optical-drive
       - removable-media
       - raw-usb
@@ -102,7 +102,10 @@ parts:
     stage-packages:
       - libnotify-bin
       - xclip
+      - python3-tk
     prime:
+      - usr/lib/python3.10/lib-dynload
+      - usr/lib/python3.10/tkinter
       - usr/bin/notify*
       - usr/bin/xclip*
        
