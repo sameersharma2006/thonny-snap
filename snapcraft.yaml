@@ -105,11 +105,22 @@ parts:
       - libnotify-bin
       - xclip
       - python3-tk
+      - libXmu6
+      - tk8.6-blt2.5
+      - libtcl8.6
+      - libtk8.6
     prime:
       - usr/lib/python3.10/lib-dynload
       - usr/lib/python3.10/tkinter
       - usr/bin/notify*
       - usr/bin/xclip*
+      - usr/lib/*/libXmu.so*
+      - usr/lib/blt2.5
+      - usr/lib/libBLT*
+      - usr/lib/*/libtcl8.6.so*
+      - usr/share/tcltk
+      - usr/lib/*/libtk8.6.so*
+      - usr/lib/tcltk
        
   cleanup:
     after: [sundry-deps]
