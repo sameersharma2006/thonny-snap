@@ -105,7 +105,7 @@ parts:
       - libnotify-bin
       - xclip
       - python3-tk
-      - libXmu6
+      - libxmu6
       - tk8.6-blt2.5
       - libtcl8.6
       - libtk8.6
