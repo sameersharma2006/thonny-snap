@@ -117,7 +117,7 @@ parts:
       - usr/bin/xclip*
       - usr/lib/*/libXmu.so*
       - usr/lib/blt2.5
-      - usr/lib/libBLT*
+      - usr/lib/libBLT.2.5.so.8.6
       - usr/lib/*/libtcl8.6.so*
       - usr/share/tcltk
       - usr/lib/*/libtk8.6.so*
