@@ -109,6 +109,7 @@ parts:
       - tk8.6-blt2.5
       - libtcl8.6
       - libtk8.6
+      - libxss1
     prime:
       - usr/lib/python3.10/lib-dynload
       - usr/lib/python3.10/tkinter
@@ -121,6 +122,7 @@ parts:
       - usr/share/tcltk
       - usr/lib/*/libtk8.6.so*
       - usr/lib/tcltk
+      - usr/lib/*/libXss.so*
        
   cleanup:
     after: [sundry-deps]
