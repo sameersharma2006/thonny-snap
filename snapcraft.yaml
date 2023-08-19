@@ -37,6 +37,7 @@ apps:
       - process-control
       - optical-drive
       - removable-media
+      - raw-usb
       - unity7
       - screen-inhibit-control
       - udisks2
@@ -69,7 +70,7 @@ parts:
       - -share/doc
       - -share/man
   
-  utils:
+  utils: # For Using Upstream Desktop and Icon Files.
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.2
     after: [thonny]
@@ -84,7 +85,7 @@ parts:
     stage:
       - utils
          
-  zenity:
+  zenity: # For accessing gtk-file-portal by thonny.
     source: https://gitlab.gnome.org/GNOME/zenity.git
     source-tag: 3.44.1
     after: [utils]
@@ -93,10 +94,20 @@ parts:
       - -Dprefix=/usr
     stage:
       - usr/bin
-      - usr/share/zenity  
-   
-  cleanup:
+      - usr/share/zenity 
+       
+  sundry-deps: # For sundry reasons.
     after: [zenity]
+    plugin: nil  
+    stage-packages:
+      - libnotify-bin
+      - xclip
+    prime:
+      - usr/bin/notify*
+      - usr/bin/xclip*
+       
+  cleanup:
+    after: [sundry-deps]
     plugin: nil
     build-snaps: [core22, gtk-common-themes, gnome-42-2204]
     override-prime: |
