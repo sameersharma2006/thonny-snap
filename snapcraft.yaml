@@ -6,6 +6,7 @@ confinement: strict
 compression: lzo
 architectures:
   - build-on: amd64
+  - build-on: arm64
 
 slots:
   thonny:
