@@ -20,6 +20,7 @@ apps:
     extensions: [gnome]
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
+      TMPDIR: $XDG_RUNTIME_DIR
       PYTHONPATH: ${SNAP}/lib64/python3.10/site-packages:${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3/dist-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
     common-id: org.thonny.Thonny
     desktop: utils/org.thonny.Thonny.desktop 
@@ -30,6 +31,7 @@ apps:
       - network-status
       - audio-playback
       - audio-record
+      - browser-support
       - bluez
       - camera
       - hardware-observe
