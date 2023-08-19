@@ -17,10 +17,11 @@ apps:
   thonny:
     command: bin/thonny
     extensions: [gnome]
-    common-id: org.thonny.Thonny
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
-      PYTHONPATH: PYTHONPATH: ${SNAP}/lib64/python3.10/site-packages:${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3/dist-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
+      PYTHONPATH: ${SNAP}/lib64/python3.10/site-packages:${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3/dist-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
+    common-id: org.thonny.Thonny
+    desktop: utils/org.thonny.Thonny.desktop 
     plugs:
       - home
       - network
@@ -39,8 +40,7 @@ apps:
       - screen-inhibit-control
       - udisks2
       - upower-observe
-    desktop: utils/org.thonny.Thonny.desktop   
-
+      
 parts:
   thonny:
     plugin: python
