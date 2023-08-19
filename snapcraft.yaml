@@ -50,13 +50,6 @@ parts:
     build-environment:
       - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
       - PYTHONPATH: ""
-    override-pull: |
-      craftctl default
-      sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
-      sed -e 's|Icon=thonny|Icon=${SNAP}/utils/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
-      mkdir $CRAFT_PART_SRC/utils
-      cp packaging/linux/org.thonny.Thonny.desktop $CRAFT_PART_SRC/utils
-      cp packaging/icons/thonny-256x256.png $CRAFT_PART_SRC/utils
     stage:
       - -bin/activate
       - -bin/activate.csh
@@ -74,11 +67,26 @@ parts:
       - -share/python-wheels
       - -share/doc
       - -share/man
-       
+  
+  utils:
+    source: https://github.com/thonny/thonny.git
+    source-tag: v4.1.2
+    after: [thonny]
+    plugin: dump
+    override-pull: |
+      craftctl default
+      sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
+      sed -e 's|Icon=thonny|Icon=${SNAP}/utils/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
+      mkdir utils
+      cp packaging/linux/org.thonny.Thonny.desktop utils
+      cp packaging/icons/thonny-256x256.png utils
+    stage:
+      - utils
+         
   zenity:
     source: https://gitlab.gnome.org/GNOME/zenity.git
     source-tag: 3.44.1
-    after: [thonny]
+    after: [utils]
     plugin: meson
     meson-parameters:
       - -Dprefix=/usr
