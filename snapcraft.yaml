@@ -106,13 +106,10 @@ parts:
     meson-version: 0.61.5
     meson-parameters:
       - -Dprefix=/usr
-    stage:
-      - -usr/share/locale
-      - -usr/share/help
-      - -usr/share/doc
-      - -usr/share/fonts
-      - -usr/share/man
-  
+    prime:
+      - usr/bin
+      - usr/share/zenity
+      
   xclip:  # For proper working of Kivy inside the sandbox.
     after: [zenity] 
     source: https://github.com/astrand/xclip.git
@@ -122,16 +119,15 @@ parts:
       - --prefix=/usr
     build-packages:
       - libxmu-dev
-      - libxmu-headers  
-    stage:
-      - -usr/share/locale
-      - -usr/share/help
-      - -usr/share/doc
-      - -usr/share/fonts
-      - -usr/share/man
-      - -usr/include
-      - -share
-  
+      - libxmu-headers 
+    stage-packages:
+      - libxmu6
+      - libxt6   
+    prime:
+      - usr/bin
+      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXt.so*
+      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXmu.so*
+     
   sundry-deps: # For sundry reasons.
     after: [xclip]
     plugin: nil  
