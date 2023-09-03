@@ -20,6 +20,7 @@ apps:
     common-id: org.thonny.Thonny
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
+      TMPDIR: $XDG_RUNTIME_DIR
     plugs:
       - home
       - unity7
