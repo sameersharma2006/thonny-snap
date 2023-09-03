@@ -123,7 +123,8 @@ parts:
       - libnotify-bin
       - zenity
     prime:
-      - usr/bin
+      - usr/bin/zenity
+      - usr/bin/notify-send
       - usr/share/zenity
        
   cleanup:
