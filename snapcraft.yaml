@@ -116,7 +116,7 @@ parts:
       - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXt.so*
       - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXmu.so*
      
-  sundry-deps: 
+  deps: 
     after: [xclip]
     plugin: nil  
     stage-packages:
@@ -127,7 +127,7 @@ parts:
       - usr/share/zenity
        
   cleanup:
-    after: [sundry-deps]
+    after: [deps]
     plugin: nil
     build-snaps: [core18, gtk-common-themes, gnome-3-34-1804]
     override-prime: |
@@ -135,4 +135,3 @@ parts:
       for snap in "core18" "gtk-common-themes" "gnome-3-34-1804"; do
           cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
       done    
- 
