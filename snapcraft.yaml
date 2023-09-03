@@ -97,21 +97,9 @@ parts:
       - -install*
       - -CREDITS*
       - -setup*         
-   
-  zenity: # For accessing gtk-file-portal by thonny.
-    after: [thonny]
-    source: https://gitlab.gnome.org/GNOME/zenity.git
-    source-tag: 3.41.0
-    plugin: meson
-    meson-version: 0.61.5
-    meson-parameters:
-      - -Dprefix=/usr
-    prime:
-      - usr/bin
-      - usr/share/zenity
       
-  xclip:  # For proper working of Kivy inside the sandbox.
-    after: [zenity] 
+  xclip: 
+    after: [thonny] 
     source: https://github.com/astrand/xclip.git
     source-tag: '0.13'
     plugin: autotools
@@ -128,13 +116,15 @@ parts:
       - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXt.so*
       - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXmu.so*
      
-  sundry-deps: # For sundry reasons.
+  sundry-deps: 
     after: [xclip]
     plugin: nil  
     stage-packages:
       - libnotify-bin
+      - zenity
     prime:
-      - usr/bin/notify*
+      - usr/bin
+      - usr/share/zenity
        
   cleanup:
     after: [sundry-deps]
