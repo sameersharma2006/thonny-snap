@@ -146,6 +146,6 @@ parts:
     override-prime: |
       set -eux
       for snap in "core18" "gtk-common-themes" "gnome-3-34-1804"; do
-        cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
+          cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
       done    
  
