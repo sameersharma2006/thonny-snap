@@ -21,7 +21,7 @@ apps:
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
       TMPDIR: $XDG_RUNTIME_DIR
-      PYTHONPATH: ${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3/dist-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
+      PYTHONPATH: ${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3.10/dist-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
     common-id: org.thonny.Thonny
     desktop: utils/org.thonny.Thonny.desktop 
     plugs:
@@ -90,10 +90,17 @@ parts:
       - python3-tk
       - zenity
     prime:
-      - usr/lib
-      - usr/bin
+      - usr/lib/python*
+      - usr/lib/tcltk*
+      - usr/lib/blt2.5*
+      - usr/lib/libBLT.2.5.so*
+      - usr/lib/*/libXss.so*
+      - usr/lib/*/libXmu.so*
+      - usr/bin/xclip*
+      - usr/bin/notify*
+      - usr/bin/zenity*
       - usr/share/zenity
-       
+      
   cleanup:
     after: [sundry-deps]
     plugin: nil
