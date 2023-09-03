@@ -124,6 +124,7 @@ parts:
       - zenity
     prime:
       - usr/bin/zenity
+      - usr/bin/gdialog
       - usr/bin/notify-send
       - usr/share/zenity
        
