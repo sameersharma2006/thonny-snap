@@ -22,6 +22,7 @@ apps:
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
       TMPDIR: $XDG_RUNTIME_DIR
+      PYTHONPATH: ${SNAP}/lib/python3.11/site-packages:${SNAP}/usr/lib/python3.11
     plugs:
       - home
       - unity7
