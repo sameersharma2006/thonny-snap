@@ -48,7 +48,7 @@ parts:
     source: https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tar.xz
     source-checksum: md5/8847dc6458d1431d0ae0f55942deeb89
     plugin: autotools
-    autotools-configure-parameters:
+    configflags:
       - --prefix=/usr
       - --enable-optimizations
     build-packages: 
