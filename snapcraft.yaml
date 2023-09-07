@@ -1,5 +1,5 @@
 name: thonny
-base: core20
+base: core18
 adopt-info: thonny
 grade: stable
 confinement: strict
@@ -16,13 +16,13 @@ slots:
  
 apps:
   thonny:
-    command: bin/thonny
-    extensions: [gnome-3-38]
+    command: usr/local/bin/thonny
+    extensions: [gnome-3-34]
     common-id: org.thonny.Thonny
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
       TMPDIR: $XDG_RUNTIME_DIR
-      PYTHONPATH: ${SNAP}/lib/python3.11/site-packages:${SNAP}/usr/lib/python3.11
+      PYTHONPATH: ${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
     plugs:
       - home
       - unity7
@@ -45,8 +45,8 @@ apps:
 
 parts:
   python:
-    source: https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tar.xz
-    source-checksum: md5/393856f1b7713aa8bba4b642ab9985d3
+    source: https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tar.xz
+    source-checksum: md5/8847dc6458d1431d0ae0f55942deeb89
     plugin: autotools
     autotools-configure-parameters:
       - --prefix=/usr
@@ -62,28 +62,17 @@ parts:
       - tk-dev
     prime:
       - -usr/include
-      - -usr/lib/libpython3.11.a
+      - -usr/lib/libpython3.10.a
       - -usr/lib/pkgconfig
       - -usr/share/man
-      
-  thonny:
-    source: https://github.com/thonny/thonny.git
-    source-tag: v4.1.2
-    after: [python]
-    plugin: python
-    parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
-    stage:
-      - -share/python-wheels
-      - -share/doc
-      - -share/man
-      - -bin/activate*
-      - -bin/Activate.ps1
-      - -bin/python*
-      - -bin/pip*
-      - -pyvenv.cfg
-      - -lib/**/setuptools*
-      - -lib/**/pip* 
   
+  thonny:
+    after: [python]
+    plugin: nil
+    override-build: |
+      snapcraftctl build
+      pip install --prefix=$SNAPCRAFT_PART_INSTALL/usr thonny==4.1.2
+
   utils: 
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.2
@@ -91,38 +80,49 @@ parts:
     plugin: dump
     override-pull: |
       snapcraftctl pull
-      sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
+      sed -e 's|Exec=/usr/bin/thonny %F|Exec=usr/local/bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
       sed -e 's|Icon=thonny|Icon=${SNAP}/utils/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
       mkdir utils
       cp packaging/linux/org.thonny.Thonny.desktop utils
       cp packaging/icons/thonny-256x256.png utils
     prime:
       - utils
-
+   
+  xclip: 
+    after: [utils] 
+    source: https://github.com/astrand/xclip/archive/refs/tags/0.13.tar.gz
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+    build-packages:
+      - libxmu-dev
+      - libxmu-headers 
+    stage-packages:
+      - libxmu6
+      - libxt6   
+    prime:
+      - usr/bin
+      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXt.so*
+      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXmu.so*
+        
   deps: 
-    after: [utils]
+    after: [xclip]
     plugin: nil  
     stage-packages:
       - libnotify-bin
       - zenity
-      - xclip
-      - libxmu6
-      - libxt6
     prime:
       - usr/bin/zenity
       - usr/bin/gdialog
       - usr/bin/notify-send
       - usr/share/zenity
-      - usr/bin/xclip*
-      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXt.so*
-      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXmu.so*
-       
+      
   cleanup:
     after: [deps]
     plugin: nil
-    build-snaps: [core20, gtk-common-themes, gnome-3-38-2004]
+    build-snaps: [core18, gtk-common-themes, gnome-3-34-1804]
     override-prime: |
       set -eux
-      for snap in "core20" "gtk-common-themes" "gnome-3-38-2004"; do
+      for snap in "core18" "gtk-common-themes" "gnome-3-34-1804"; do
           cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
       done    
