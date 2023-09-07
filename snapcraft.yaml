@@ -90,7 +90,7 @@ parts:
     after: [thonny]
     plugin: dump
     override-pull: |
-      craftctl default
+      snapcraftctl pull
       sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
       sed -e 's|Icon=thonny|Icon=${SNAP}/utils/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
       mkdir utils
