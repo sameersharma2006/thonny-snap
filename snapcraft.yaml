@@ -1,8 +1,3 @@
-'''
-This Branch Is WIP or Canary level, used for deciding future of Thonny Snap.
-Will constantly change including snap bases etc.
-Branch needs lots of Polishing/Fixes/Stabilization.
-'''
 name: thonny
 base: core18
 adopt-info: thonny
@@ -26,7 +21,6 @@ apps:
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
       TMPDIR: $XDG_RUNTIME_DIR
-      PYTHONPATH: ${SNAP}/usr/local/bin:${SNAP}/usr/local/lib
     plugs:
       - home
       - unity7
@@ -45,14 +39,15 @@ apps:
       - udisks2
       - removable-media
       - screen-inhibit-control
-    desktop: packaging/linux/org.thonny.Thonny.desktop   
+    desktop: utils/org.thonny.Thonny.desktop    
 
 parts:
   python:
     source: https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tgz
     source-checksum: md5/b628f21aae5e2c3006a12380905bb640
-    plugin: make
-    make-parameters:
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
       - --enable-optimizations
     build-packages: 
       - libncurses5-dev 
@@ -62,66 +57,50 @@ parts:
       - libreadline-dev 
       - libffi-dev 
       - libbz2-dev 
+    prime:
+      - -usr/include
+      - -usr/lib/libpython3.11.a
+      - -usr/lib/pkgconfig
+      - -usr/share/man
       
   thonny:
     source: https://github.com/thonny/thonny.git
+    source-tag: v4.1.2
     after: [python]
+    plugin: python
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
-    plugin: dump
-    build-packages:
-      - wget
-    override-pull: |
-      snapcraftctl pull
-      VER="$(git describe --tags --abbrev=0 | cut -c 2-)"
-      wget -q -O- https://github.com/thonny/thonny/releases/download/v${VER}/thonny-${VER}-x86_64.tar.gz |\
-           tar xzf - --strip-components=1 -C $SNAPCRAFT_PART_SRC
-    override-prime: |
-      snapcraftctl prime
-      sed -e 's|Icon=thonny|Icon=${SNAP}/packaging/icons/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop 
+    build-environment:
+      - PATH: ${SNAPCRAFT_PART_INSTALL}/bin:${PATH}
+      - PYTHONPATH: ""
     stage:
-      - -packaging/setuptools
-      - -packaging/mac
-      - -packaging/windows
-      - -include 
-      - -thonny
-      - -misc
-      - -templates
-      - -data
-      - -docs
-      - -licenses
-      - -packaging/pip*
-      - -packaging/portable*
-      - -packaging/readme*
-      - -packaging/requirements*
-      - -packaging/icons/preview*
-      - -packaging/license*
-      - -packaging/linux/build*
-      - -packaging/linux/install*
-      - -packaging/linux/create*
-      - -packaging/linux/insert*
-      - -packaging/linux/downinstall*
-      - -packaging/linux/uninstall*
-      - -packaging/linux/readme*
-      - -packaging/linux/README*
-      - -packaging/linux/thonny*
-      - -packaging/linux/Thonny*
-      - -packaging/linux/org.thonny.Thonny.Devel.yaml
-      - -build*
-      - -copy*
-      - -MANIFEST*
-      - -CONTRIBUTING*
-      - -requirements*
-      - -README*
-      - -LICENSE*
-      - -CHANGELOG*
-      - -mypy*
-      - -pyproject*
-      - -install*
-      - -CREDITS*
-      - -setup*         
-      
+      - -share/python-wheels
+      - -share/doc
+      - -share/man
+      - -bin/activate*
+      - -bin/Activate.ps1
+      - -bin/python*
+      - -bin/pip*
+      - -pyvenv.cfg
+      - -lib/**/setuptools*
+      - -lib/**/pip* 
+  
+  utils: 
+    source: https://github.com/thonny/thonny.git
+    source-tag: v4.1.2
+    after: [thonny]
+    plugin: dump
+    override-pull: |
+      craftctl default
+      sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
+      sed -e 's|Icon=thonny|Icon=${SNAP}/utils/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
+      mkdir utils
+      cp packaging/linux/org.thonny.Thonny.desktop utils
+      cp packaging/icons/thonny-256x256.png utils
+    prime:
+      - utils
+          
   xclip: 
-    after: [thonny] 
+    after: [utils] 
     source: https://github.com/astrand/xclip.git
     source-tag: '0.13'
     plugin: autotools
