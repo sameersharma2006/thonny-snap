@@ -43,8 +43,8 @@ apps:
 
 parts:
   python:
-    source: https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tgz
-    source-checksum: md5/b628f21aae5e2c3006a12380905bb640
+    source: https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tar.xz
+    source-checksum: md5/393856f1b7713aa8bba4b642ab9985d3
     plugin: autotools
     configflags:
       - --prefix=/usr
@@ -57,6 +57,7 @@ parts:
       - libreadline-dev 
       - libffi-dev 
       - libbz2-dev 
+      - tk-dev
     prime:
       - -usr/include
       - -usr/lib/libpython3.11.a
@@ -69,10 +70,7 @@ parts:
     after: [python]
     plugin: python
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
-    build-environment:
-      - PATH: ${SNAPCRAFT_PART_INSTALL}/bin:${PATH}
-      - PYTHONPATH: ""
-    stage:
+    prime:
       - -share/python-wheels
       - -share/doc
       - -share/man
