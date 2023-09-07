@@ -1,11 +1,12 @@
 name: thonny
-base: core18
+base: core20
 adopt-info: thonny
 grade: stable
 confinement: strict
 compression: lzo
 architectures:
   - build-on: amd64
+  - build-on: arm64
    
 slots:
   thonny:
@@ -16,7 +17,7 @@ slots:
 apps:
   thonny:
     command: bin/thonny
-    extensions: [gnome-3-34]
+    extensions: [gnome-3-38]
     common-id: org.thonny.Thonny
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
@@ -46,7 +47,7 @@ parts:
     source: https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tar.xz
     source-checksum: md5/393856f1b7713aa8bba4b642ab9985d3
     plugin: autotools
-    configflags:
+    autotools-configure-parameters:
       - --prefix=/usr
       - --enable-optimizations
     build-packages: 
@@ -70,7 +71,7 @@ parts:
     after: [python]
     plugin: python
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
-    prime:
+    stage:
       - -share/python-wheels
       - -share/doc
       - -share/man
@@ -96,43 +97,31 @@ parts:
       cp packaging/icons/thonny-256x256.png utils
     prime:
       - utils
-          
-  xclip: 
-    after: [utils] 
-    source: https://github.com/astrand/xclip.git
-    source-tag: '0.13'
-    plugin: autotools
-    configflags:
-      - --prefix=/usr
-    build-packages:
-      - libxmu-dev
-      - libxmu-headers 
-    stage-packages:
-      - libxmu6
-      - libxt6   
-    prime:
-      - usr/bin
-      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXt.so*
-      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXmu.so*
-     
+
   deps: 
-    after: [xclip]
+    after: [utils]
     plugin: nil  
     stage-packages:
       - libnotify-bin
       - zenity
+      - xclip
+      - libxmu6
+      - libxt6
     prime:
       - usr/bin/zenity
       - usr/bin/gdialog
       - usr/bin/notify-send
       - usr/share/zenity
+      - usr/bin/xclip*
+      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXt.so*
+      - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXmu.so*
        
   cleanup:
     after: [deps]
     plugin: nil
-    build-snaps: [core18, gtk-common-themes, gnome-3-34-1804]
+    build-snaps: [core20, gtk-common-themes, gnome-3-38-2004]
     override-prime: |
       set -eux
-      for snap in "core18" "gtk-common-themes" "gnome-3-34-1804"; do
+      for snap in "core20" "gtk-common-themes" "gnome-3-38-2004"; do
           cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
       done    
