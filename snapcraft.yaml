@@ -7,13 +7,13 @@ compression: lzo
 architectures:
   - build-on: amd64
   - build-on: arm64
-   
+
 slots:
   thonny:
     interface: dbus
     bus: session
     name: org.thonny.Thonny
- 
+
 apps:
   thonny:
     command: usr/local/bin/thonny
@@ -41,7 +41,7 @@ apps:
       - udisks2
       - removable-media
       - screen-inhibit-control
-    desktop: utils/org.thonny.Thonny.desktop    
+    desktop: utils/org.thonny.Thonny.desktop
 
 parts:
   python:
@@ -51,14 +51,14 @@ parts:
     configflags:
       - --prefix=/usr
       - --enable-optimizations
-    build-packages: 
-      - libncurses5-dev 
-      - libgdbm-dev 
-      - libnss3-dev 
-      - libssl-dev 
-      - libreadline-dev 
-      - libffi-dev 
-      - libbz2-dev 
+    build-packages:
+      - libncurses5-dev
+      - libgdbm-dev
+      - libnss3-dev
+      - libssl-dev
+      - libreadline-dev
+      - libffi-dev
+      - libbz2-dev
       - tk-dev
       - liblzma-dev
       - uuid-dev
@@ -67,7 +67,7 @@ parts:
       - -usr/lib/libpython3.9.a
       - -usr/lib/pkgconfig
       - -usr/share/man
-  
+
   thonny:
     after: [python]
     plugin: nil
@@ -75,7 +75,7 @@ parts:
       snapcraftctl build
       pip3 install --prefix=$SNAPCRAFT_PART_INSTALL/usr thonny==4.1.2
 
-  utils: 
+  utils:
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.2
     after: [thonny]
@@ -89,27 +89,27 @@ parts:
       cp packaging/icons/thonny-256x256.png utils
     prime:
       - utils
-   
-  xclip: 
-    after: [utils] 
+
+  xclip:
+    after: [utils]
     source: https://github.com/astrand/xclip/archive/refs/tags/0.13.tar.gz
     plugin: autotools
     configflags:
       - --prefix=/usr
     build-packages:
       - libxmu-dev
-      - libxmu-headers 
+      - libxmu-headers
     stage-packages:
       - libxmu6
-      - libxt6   
+      - libxt6
     prime:
       - usr/bin
       - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXt.so*
       - usr/lib/$SNAPCRAFT_ARCH_TRIPLET/libXmu.so*
-        
-  deps: 
+
+  deps:
     after: [xclip]
-    plugin: nil  
+    plugin: nil
     stage-packages:
       - libnotify-bin
       - zenity
@@ -118,7 +118,7 @@ parts:
       - usr/bin/gdialog
       - usr/bin/notify-send
       - usr/share/zenity
-      
+
   cleanup:
     after: [deps]
     plugin: nil
@@ -127,4 +127,4 @@ parts:
       set -eux
       for snap in "core18" "gtk-common-themes" "gnome-3-34-1804"; do
           cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
-      done    
+      done
