@@ -6,7 +6,7 @@ confinement: strict
 compression: lzo
 architectures:
   - build-on: amd64
-  - build-on: arm64
+  #- build-on: arm64
 
 slots:
   thonny:
@@ -46,17 +46,26 @@ parts:
   tcl:
     source: https://sourceforge.net/projects/tcl/files/Tcl/8.6.13/tcl8.6.13-src.tar.gz
     plugin: make
-    make-parameters:
-      - --prefix=/usr
-        
+    override-build: |
+      snapcraftctl build
+      cd unix
+      ./configure --prefix=/usr
+      make
+      make test
+      make install
+  
   tk:
     source: https://sourceforge.net/projects/tcl/files/Tcl/8.6.13/tk8.6.13-src.tar.gz
     after: [tcl]
     plugin: make
-    make-parameters:
-      - --prefix=/usr 
-      - --disable-xss
-     
+    override-build: |
+      snapcraftctl build
+      cd unix
+      ./configure --prefix=/usr --disable-xss
+      make
+      make test
+      make install
+    
   python:
     source: https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tar.xz
     source-checksum: md5/8847dc6458d1431d0ae0f55942deeb89
