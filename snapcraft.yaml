@@ -16,7 +16,7 @@ slots:
 
 apps:
   thonny:
-    command: usr/local/bin/thonny
+    command: bin/thonny
     extensions: [gnome-3-34]
     common-id: org.thonny.Thonny
     environment:
@@ -43,13 +43,30 @@ apps:
     desktop: utils/org.thonny.Thonny.desktop
 
 parts:
+  tcl:
+    source: https://sourceforge.net/projects/tcl/files/Tcl/8.6.13/tcl8.6.13-src.tar.gz/download
+    plugin: autotools
+    configflags:
+      - --prefix=/usr
+        
+  tk:
+    source: https://sourceforge.net/projects/tcl/files/Tcl/8.6.13/tk8.6.13-src.tar.gz/download
+    after: [tcl]
+    plugin: autotools
+    configflags:
+      - --prefix=/usr 
+      - --disable-xss
+     
   python:
-    source: https://www.python.org/ftp/python/3.9.18/Python-3.9.18.tar.xz
-    source-checksum: md5/765576c3af57deb046819ecd57804bbb
+    source: https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tar.xz
+    source-checksum: md5/8847dc6458d1431d0ae0f55942deeb89
+    after: [tk]
     plugin: autotools
     configflags:
       - --prefix=/usr
       - --enable-optimizations
+      - --with-tcltk-includes=usr/include
+	  - --with-tcltk-libs=usr/lib
     build-packages:
       - libncurses5-dev
       - libgdbm-dev
@@ -57,13 +74,14 @@ parts:
       - libssl-dev
       - libreadline-dev
       - libffi-dev
-      - libbz2-dev
-      - tk-dev
-      - liblzma-dev
-      - uuid-dev
+      - libbz2-dev 
+      - lzma-dev 
+      - liblzma-dev 
+      - xz-utils
+      - uuid-dev  
     prime:
       - -usr/include
-      - -usr/lib/libpython3.9.a
+      - -usr/lib/libpython3.10.a
       - -usr/lib/pkgconfig
       - -usr/share/man
       - -usr/lib/*/test
@@ -81,19 +99,14 @@ parts:
     python-packages:
       - setuptools == 68.2.0
       - pip == 23.2.1
+      - pylint == 2.17.5
+      - jedi == 0.19.0
+      - pyserial == 3.5
+      - mypy == 1.5.1
+      - docutils == 0.20.1
+      - Send2Trash == 1.8.2
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
-    stage:
-      - -share/python-wheels
-      - -share/doc
-      - -share/man
-      - -bin/activate*
-      - -bin/Activate.ps1
-      - -bin/python*
-      - -bin/pip*
-      - -pyvenv.cfg
-      - -lib/**/setuptools*
-      - -lib/**/pip* 
-        
+   
   utils:
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.2
@@ -101,7 +114,7 @@ parts:
     plugin: dump
     override-pull: |
       snapcraftctl pull
-      sed -e 's|Exec=/usr/bin/thonny %F|Exec=usr/local/bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
+      sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
       sed -e 's|Icon=thonny|Icon=${SNAP}/utils/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
       mkdir utils
       cp packaging/linux/org.thonny.Thonny.desktop utils
