@@ -45,14 +45,14 @@ apps:
 parts:
   tcl:
     source: https://sourceforge.net/projects/tcl/files/Tcl/8.6.13/tcl8.6.13-src.tar.gz
-    plugin: autotools
+    plugin: make
     configflags:
       - --prefix=/usr
         
   tk:
     source: https://sourceforge.net/projects/tcl/files/Tcl/8.6.13/tk8.6.13-src.tar.gz
     after: [tcl]
-    plugin: autotools
+    plugin: make
     configflags:
       - --prefix=/usr 
       - --disable-xss
