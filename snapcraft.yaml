@@ -6,7 +6,7 @@ confinement: strict
 compression: lzo
 architectures:
   - build-on: amd64
-  - build-on: arm64
+  #- build-on: arm64
 
 slots:
   thonny:
@@ -21,7 +21,6 @@ apps:
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
       TMPDIR: $XDG_RUNTIME_DIR
-      PYTHONPATH: ${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3.10/dist-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
     common-id: org.thonny.Thonny
     desktop: utils/org.thonny.Thonny.desktop 
     plugs:
@@ -50,6 +49,7 @@ parts:
     plugin: python
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.2
+    after: [tk]
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     build-environment:
       - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
@@ -87,15 +87,9 @@ parts:
     stage-packages:
       - libnotify-bin
       - xclip
-      - python3-tk
       - zenity
     prime:
       - usr/lib/python*
-      - usr/lib/tcltk*
-      - usr/lib/*/libtk8.6.so*
-      - usr/lib/*/libtcl8.6.so*
-      - usr/lib/blt2.5*
-      - usr/lib/libBLT.2.5.so*
       - usr/lib/*/libXss.so*
       - usr/lib/*/libXmu.so*
       - usr/bin/xclip*
