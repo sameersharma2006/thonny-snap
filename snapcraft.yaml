@@ -90,7 +90,6 @@ parts:
       - -usr/lib/*/idlelib
       - -usr/lib/*/lib2to3
       - -usr/lib/*/config-3.9*
-      - -usr/lib/python3.9/site-packages/setuptools*
       - -usr/bin/2to3*
       - -usr/bin/idle*
       - -usr/bin/pydoc*
