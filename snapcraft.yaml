@@ -44,9 +44,8 @@ apps:
 
 parts:
   python:
-    source: https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tar.xz
-    source-checksum: md5/8847dc6458d1431d0ae0f55942deeb89
-    after: [tk]
+    source: https://www.python.org/ftp/python/3.9.18/Python-3.9.18.tar.xz
+    source-checksum: md5/765576c3af57deb046819ecd57804bbb
     plugin: autotools
     configflags:
       - --prefix=/usr
@@ -66,7 +65,7 @@ parts:
       - uuid-dev  
     prime:
       - -usr/include
-      - -usr/lib/libpython3.10.a
+      - -usr/lib/libpython3.9.a
       - -usr/lib/pkgconfig
       - -usr/share/man
       - -usr/lib/*/test
