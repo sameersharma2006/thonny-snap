@@ -80,6 +80,7 @@ parts:
       - uuid-dev 
       - libbluetooth-dev
       - libffi-dev 
+      - tk-dev
     prime:
       - -usr/include
       - -usr/lib/libpython3.9.a
