@@ -22,7 +22,6 @@ apps:
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
       TMPDIR: $XDG_RUNTIME_DIR
-      PYTHONPATH: ${SNAP}/lib/python3.9/site-packages:${SNAP}/usr/local/lib/python3.9/dist-packages
     plugs:
       - home
       - unity7
@@ -67,14 +66,34 @@ parts:
       - -usr/lib/libpython3.9.a
       - -usr/lib/pkgconfig
       - -usr/share/man
+      - -usr/lib/*/test
+      - -usr/lib/*/idlelib
+      - -usr/lib/*/lib2to3
+      - -usr/bin/2to3*
+      - -usr/bin/idle*
 
   thonny:
     after: [python]
-    plugin: nil
-    override-build: |
-      snapcraftctl build
-      pip3 install --prefix=$SNAPCRAFT_PART_INSTALL/usr thonny==4.1.2
-
+    source: https://github.com/thonny/thonny.git
+    source-tag: v4.1.2
+    after: [python]
+    plugin: python
+    python-packages:
+      - setuptools == 68.2.0
+      - pip == 23.2.1
+    parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
+    stage:
+      - -share/python-wheels
+      - -share/doc
+      - -share/man
+      - -bin/activate*
+      - -bin/Activate.ps1
+      - -bin/python*
+      - -bin/pip*
+      - -pyvenv.cfg
+      - -lib/**/setuptools*
+      - -lib/**/pip* 
+        
   utils:
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.2
