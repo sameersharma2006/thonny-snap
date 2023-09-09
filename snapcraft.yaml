@@ -65,8 +65,6 @@ parts:
     configflags:
       - --prefix=/usr
       - --enable-optimizations
-      - --with-tcltk-includes=usr/include
-	  - --with-tcltk-libs=usr/lib
     build-packages:
       - libncurses5-dev
       - libgdbm-dev
