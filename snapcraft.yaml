@@ -66,6 +66,7 @@ parts:
     plugin: autotools
     configflags:
       - --prefix=/usr
+      - --with-ensurepip=install
       - --enable-optimizations
     build-packages:
       - libncurses5-dev
@@ -78,18 +79,19 @@ parts:
       - liblzma-dev 
       - xz-utils
       - uuid-dev 
-      - libbluetooth-dev
       - libffi-dev 
       - tk-dev
+      - nasm
     prime:
       - -usr/include
-      - -usr/lib/libpython3.9.a
+      - -usr/lib/libpython3.9*
       - -usr/lib/pkgconfig
       - -usr/share/man
       - -usr/lib/*/test
       - -usr/lib/*/idlelib
       - -usr/lib/*/lib2to3
       - -usr/lib/*/config-3.9-$SNAPCRAFT_ARCH_TRIPLET/libpython3.9*
+      - -usr/lib/*/config-3.9-$SNAPCRAFT_ARCH_TRIPLET/python.o
       - -usr/bin/2to3*
       - -usr/bin/idle*
       - -usr/bin/pydoc*
@@ -100,8 +102,6 @@ parts:
     after: [python]
     plugin: python
     python-packages:
-      - setuptools == 68.2.0
-      - pip == 23.2.1
       - pylint == 2.17.5
       - jedi == 0.19.0
       - pyserial == 3.5
