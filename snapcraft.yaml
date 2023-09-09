@@ -77,7 +77,9 @@ parts:
       - lzma-dev 
       - liblzma-dev 
       - xz-utils
-      - uuid-dev  
+      - uuid-dev 
+      - libbluetooth-dev
+      - libffi-dev 
     prime:
       - -usr/include
       - -usr/lib/libpython3.9.a
