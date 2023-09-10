@@ -105,13 +105,9 @@ parts:
     after: [python]
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     build-environment:
-      - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
-      - PYTHONPATH: ""
       - PARTS_PYTHON_INTERPRETER: python3.11
     stage:
-      - -share/python-wheels
-      - -share/doc
-      - -share/man
+      - -share
       - -bin/activate*
       - -bin/Activate.ps1
       - -bin/python*
