@@ -6,7 +6,7 @@ confinement: strict
 compression: lzo
 architectures:
   - build-on: amd64
-  #- build-on: arm64
+  - build-on: arm64
 
 slots:
   thonny:
@@ -20,6 +20,7 @@ apps:
     extensions: [gnome]
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
+      PYTHONPATH: ${SNAP}/lib/python3.11/site-packages:${SNAP}/usr/lib/python3.11/site-packages
       TMPDIR: $XDG_RUNTIME_DIR
     common-id: org.thonny.Thonny
     desktop: utils/org.thonny.Thonny.desktop 
@@ -45,15 +46,67 @@ apps:
       - upower-observe
       
 parts:
+  tcltk:
+    plugin: nil
+    source: .
+    build-packages:
+      - make
+      - wget
+    override-build: |
+      craftctl default
+      bash tcltk.sh
+    prime:
+      - -usr/include
+      - -usr/lib/pkgconfig  
+      - -usr/man
+      - -usr/share/man
+
+  python:
+    source: https://www.python.org/ftp/python/3.11.5/Python-3.11.5.tar.xz
+    source-checksum: md5/393856f1b7713aa8bba4b642ab9985d3
+    after: [tcltk]
+    plugin: autotools
+    autotools-configure-parameters:
+      - --prefix=/usr
+      - --with-ensurepip=install
+      - --enable-optimizations
+    build-packages:
+      - libncurses5-dev
+      - libgdbm-dev
+      - libnss3-dev
+      - libssl-dev
+      - libreadline-dev
+      - libbz2-dev 
+      - lzma-dev 
+      - liblzma-dev 
+      - xz-utils
+      - uuid-dev 
+      - libffi-dev 
+      - tk-dev
+      - nasm
+    prime:
+      - -usr/include
+      - -usr/lib/pkgconfig
+      - -usr/share/man
+      - -usr/lib/*/idlelib
+      - -usr/lib/*/lib2to3
+      - -usr/lib/libpython3.11.a
+      - -usr/lib/**/libpython3.11.a
+      - -usr/lib/**/python.o
+      - -usr/bin/2to3*
+      - -usr/bin/idle*
+      - -usr/bin/pydoc*
+      
   thonny:
     plugin: python
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.2
-    after: [tk]
+    after: [python]
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     build-environment:
       - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
       - PYTHONPATH: ""
+      - PARTS_PYTHON_INTERPRETER: python3.11
     stage:
       - -share/python-wheels
       - -share/doc
@@ -62,10 +115,11 @@ parts:
       - -bin/Activate.ps1
       - -bin/python*
       - -bin/pip*
+      - -include
       - -pyvenv.cfg
       - -lib/**/setuptools*
-      - -lib/**/pip* 
-  
+      - -lib/**/pip*   
+    
   utils: 
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.2
@@ -89,12 +143,12 @@ parts:
       - xclip
       - zenity
     prime:
-      - usr/lib/python*
       - usr/lib/*/libXss.so*
       - usr/lib/*/libXmu.so*
       - usr/bin/xclip*
       - usr/bin/notify*
-      - usr/bin/zenity*
+      - usr/bin/zenity
+      - usr/bin/gdialog
       - usr/share/zenity
       
   cleanup:
@@ -106,4 +160,3 @@ parts:
       for snap in "core22" "gtk-common-themes" "gnome-42-2204"; do
           cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$CRAFT_PRIME/{}" \;
       done    
- 
