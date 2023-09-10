@@ -104,6 +104,8 @@ parts:
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     build-environment:
       - SNAPCRAFT_PYTHON_INTERPRETER: python3.10
+      - PATH: ${SNAPCRAFT_PART_INSTALL}/bin:${PATH}
+      - PYTHONPATH: ""
     stage:
       - -share
       - -bin/activate*
