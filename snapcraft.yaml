@@ -88,6 +88,7 @@ parts:
       - -usr/share/man
       - -usr/lib/*/idlelib
       - -usr/lib/*/lib2to3
+      - -usr/lib/*/test
       - -usr/lib/libpython3.10.a
       - -usr/lib/**/libpython3.10.a
       - -usr/lib/**/python.o
@@ -102,13 +103,9 @@ parts:
     plugin: python
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     build-environment:
-      - PATH: ${SNAPCRAFT_PART_INSTALL}/bin:${PATH}
-      - PYTHONPATH: ""
       - SNAPCRAFT_PYTHON_INTERPRETER: python3.10
     stage:
-      - -share/python-wheels
-      - -share/doc
-      - -share/man
+      - -share
       - -bin/activate*
       - -bin/Activate.ps1
       - -bin/python*
@@ -140,6 +137,7 @@ parts:
       - libnotify-bin
       - zenity
       - xclip
+      - libxt6
     prime:
       - usr/bin/zenity
       - usr/bin/gdialog
@@ -148,6 +146,7 @@ parts:
       - usr/bin/xclip*
       - usr/lib/*/libXss.so*
       - usr/lib/*/libXmu.so*
+      - usr/lib/*/libXt.so*
 
   cleanup:
     after: [deps]
