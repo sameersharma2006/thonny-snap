@@ -90,6 +90,7 @@ parts:
       - -usr/share/man
       - -usr/lib/*/idlelib
       - -usr/lib/*/lib2to3
+      - -usr/lib/*/test
       - -usr/lib/libpython3.11.a
       - -usr/lib/**/libpython3.11.a
       - -usr/lib/**/python.o
