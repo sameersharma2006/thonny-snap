@@ -3,7 +3,7 @@
 set -e
 
 # Install Location.
-export PREFIX=$SNAPCRAFT_PART_INSTALL/usr
+export PREFIX=$CRAFT_PART_INSTALL/usr
 
 # tcltk Version.
 VERSION=8.6.13

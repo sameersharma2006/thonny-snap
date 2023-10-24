@@ -1,5 +1,5 @@
 name: thonny
-base: core20
+base: core22
 adopt-info: thonny
 grade: stable
 confinement: strict
@@ -17,7 +17,7 @@ slots:
 apps:
   thonny:
     command: bin/thonny
-    extensions: [gnome-3-38]
+    extensions: [gnome]
     common-id: org.thonny.Thonny
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
@@ -51,7 +51,7 @@ parts:
       - make
       - wget
     override-build: |
-      snapcraftctl build
+      craftctl default
       bash tcltk.sh
     prime:
       - -usr/include
@@ -59,52 +59,14 @@ parts:
       - -usr/man
       - -usr/share/man
 
-  python:
-    source: https://www.python.org/ftp/python/3.10.13/Python-3.10.13.tar.xz
-    source-checksum: md5/8847dc6458d1431d0ae0f55942deeb89
-    after: [tcltk]
-    plugin: autotools
-    autotools-configure-parameters:
-      - --prefix=/usr
-      - --with-ensurepip=install
-      - --enable-optimizations
-    build-packages:
-      - libncurses5-dev
-      - libgdbm-dev
-      - libnss3-dev
-      - libssl-dev
-      - libreadline-dev
-      - libbz2-dev
-      - lzma-dev
-      - liblzma-dev
-      - xz-utils
-      - uuid-dev
-      - libffi-dev
-      - tk-dev
-      - nasm
-    prime:
-      - -usr/include
-      - -usr/lib/pkgconfig
-      - -usr/share/man
-      - -usr/lib/*/idlelib
-      - -usr/lib/*/lib2to3
-      - -usr/lib/*/test
-      - -usr/lib/libpython3.10.a
-      - -usr/lib/**/libpython3.10.a
-      - -usr/lib/**/python.o
-      - -usr/bin/2to3*
-      - -usr/bin/idle*
-      - -usr/bin/pydoc*
-
   thonny:
     source: https://github.com/thonny/thonny.git
-    source-tag: v4.1.2
-    after: [python]
+    source-tag: v4.1.3
+    after: [tcltk]
     plugin: python
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     build-environment:
-      - SNAPCRAFT_PYTHON_INTERPRETER: python3.10
-      - PATH: ${SNAPCRAFT_PART_INSTALL}/bin:${PATH}
+      - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
       - PYTHONPATH: ""
     stage:
       - -share
@@ -119,11 +81,11 @@ parts:
 
   utils:
     source: https://github.com/thonny/thonny.git
-    source-tag: v4.1.2
+    source-tag: v4.1.3
     after: [thonny]
     plugin: dump
     override-pull: |
-      snapcraftctl pull
+      craftctl default
       sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
       sed -e 's|Icon=thonny|Icon=${SNAP}/utils/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
       mkdir utils
@@ -139,23 +101,16 @@ parts:
       - libnotify-bin
       - zenity
       - xclip
-      - libxt6
     prime:
-      - usr/bin/zenity
-      - usr/bin/gdialog
-      - usr/bin/notify-send
-      - usr/share/zenity
-      - usr/bin/xclip*
-      - usr/lib/*/libXss.so*
-      - usr/lib/*/libXmu.so*
-      - usr/lib/*/libXt.so*
+      - usr/bin
+      - usr/lib
 
   cleanup:
     after: [deps]
     plugin: nil
-    build-snaps: [core20, gtk-common-themes, gnome-3-38-2004]
+    build-snaps: [core22, gtk-common-themes, gnome-42-2204]
     override-prime: |
       set -eux
-      for snap in "core20" "gtk-common-themes" "gnome-3-38-2004"; do
-          cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$SNAPCRAFT_PRIME/{}" \;
+      for snap in "core22" "gtk-common-themes" "gnome-42-2204"; do
+          cd "/snap/$snap/current" && find . -type f,l -name *.so.* -exec rm -f "$CRAFT_PRIME/{}" \;
       done
