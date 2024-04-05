@@ -105,7 +105,7 @@ parts:
       - usr/share/zenity
 
   py-deps:
-    after:
+    after: [deps]
     plugin: nil
     override-build: |
        craftctl default
