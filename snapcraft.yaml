@@ -48,6 +48,7 @@ parts:
     build-packages:
       - make
       - wget
+      - libx11-dev
     override-build: |
       craftctl default
       bash tcltk.sh
