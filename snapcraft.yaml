@@ -112,8 +112,6 @@ parts:
        craftctl default
        pip install --prefix=$CRAFT_PART_INSTALL/usr jedi==0.19.1
        pip install --prefix=$CRAFT_PART_INSTALL/usr platformdirs==4.2.0
-       pip install --prefix=$CRAFT_PART_INSTALL/usr wheel==0.43.0
-       pip install --prefix=$CRAFT_PART_INSTALL/usr setuptools==69.2.0
        pip install --prefix=$CRAFT_PART_INSTALL/usr pylint==3.1.0
        pip install --prefix=$CRAFT_PART_INSTALL/usr docutils==0.20.1
        pip install --prefix=$CRAFT_PART_INSTALL/usr mypy==1.9.0
