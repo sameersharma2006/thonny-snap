@@ -20,9 +20,7 @@ apps:
     extensions: [gnome]
     common-id: org.thonny.Thonny
     environment:
-      THONNY_USER_DIR: $SNAP_USER_DATA
-      PYTHONPATH: ${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3.10/site-packages
-      TMPDIR: $XDG_RUNTIME_DIR
+      PYTHONPATH: ${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3.10/site-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
     plugs:
       - home
       - unity7
@@ -41,7 +39,7 @@ apps:
       - udisks2
       - removable-media
       - screen-inhibit-control
-    desktop: utils/org.thonny.Thonny.desktop
+    desktop: appinfo/org.thonny.Thonny.desktop
 
 parts:
   tcltk:
@@ -61,14 +59,14 @@ parts:
 
   thonny:
     source: https://github.com/thonny/thonny.git
-    source-tag: v4.1.3
+    source-tag: v4.1.4
     after: [tcltk]
     plugin: python
     parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     build-environment:
       - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
       - PYTHONPATH: ""
-    stage:
+    prime:
       - -share
       - -bin/activate*
       - -bin/Activate.ps1
@@ -79,23 +77,23 @@ parts:
       - -lib/**/setuptools*
       - -lib/**/pip*
 
-  utils:
+  appinfo:
     source: https://github.com/thonny/thonny.git
-    source-tag: v4.1.3
+    source-tag: v4.1.4
     after: [thonny]
     plugin: dump
     override-pull: |
       craftctl default
       sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
       sed -e 's|Icon=thonny|Icon=${SNAP}/utils/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
-      mkdir utils
-      cp packaging/linux/org.thonny.Thonny.desktop utils
-      cp packaging/icons/thonny-256x256.png utils
+      mkdir appinfo
+      cp packaging/linux/org.thonny.Thonny.desktop appinfo
+      cp packaging/icons/thonny-256x256.png appinfo
     prime:
-      - utils
+      - appinfo
 
   deps:
-    after: [utils]
+    after: [appinfo]
     plugin: nil
     stage-packages:
       - libnotify-bin
@@ -104,9 +102,26 @@ parts:
     prime:
       - usr/bin
       - usr/lib
+      - usr/share/zenity
+
+  py-deps:
+    after:
+    plugin: nil
+    override-build: |
+       craftctl default
+       pip install --prefix=$CRAFT_PART_INSTALL/usr jedi==0.19.1
+       pip install --prefix=$CRAFT_PART_INSTALL/usr platformdirs==4.2.0
+       pip install --prefix=$CRAFT_PART_INSTALL/usr wheel==0.43.0
+       pip install --prefix=$CRAFT_PART_INSTALL/usr setuptools==69.2.0
+       pip install --prefix=$CRAFT_PART_INSTALL/usr pylint==3.1.0
+       pip install --prefix=$CRAFT_PART_INSTALL/usr docutils==0.20.1
+       pip install --prefix=$CRAFT_PART_INSTALL/usr mypy==1.9.0
+       pip install --prefix=$CRAFT_PART_INSTALL/usr asttokens==2.4.1
+       pip install --prefix=$CRAFT_PART_INSTALL/usr Send2Trash==1.8.2
+       pip install --prefix=$CRAFT_PART_INSTALL/usr packaging==24.0
 
   cleanup:
-    after: [deps]
+    after: [py-deps]
     plugin: nil
     build-snaps: [core22, gtk-common-themes, gnome-42-2204]
     override-prime: |
