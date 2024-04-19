@@ -16,7 +16,7 @@ slots:
 
 apps:
   thonny:
-    command: usr/local/bin/thonny
+    command: bin/thonny
     extensions: [gnome]
     common-id: org.thonny.Thonny
     environment:
@@ -42,11 +42,31 @@ apps:
     desktop: appinfo/org.thonny.Thonny.desktop
 
 parts:
-  thonny:
+  tcltk:
     plugin: nil
-    override-build:
+    source: .
+    build-packages:
+      - make
+      - wget
+      - libx11-dev
+    override-build: |
       craftctl default
-      pip install --prefix=$CRAFT_PART_INSTALL/usr thonny==4.1.4
+      bash tcltk.sh
+    prime:
+      - -usr/include
+      - -usr/lib/pkgconfig
+      - -usr/man
+      - -usr/share/man
+
+  thonny:
+    source: https://github.com/thonny/thonny.git
+    source-tag: v4.1.4
+    after: [tcltk]
+    plugin: python
+    parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
+    build-environment:
+      - PATH: ${CRAFT_PART_INSTALL}/bin:${PATH}
+      - PYTHONPATH: ""
 
   appinfo:
     source: https://github.com/thonny/thonny.git
@@ -55,7 +75,7 @@ parts:
     plugin: dump
     override-pull: |
       craftctl default
-      sed -e 's|Exec=/usr/bin/thonny %F|Exec=usr/local/bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
+      sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
       sed -e 's|Icon=thonny|Icon=${SNAP}/appinfo/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
       mkdir appinfo
       cp packaging/linux/org.thonny.Thonny.desktop appinfo
@@ -63,14 +83,8 @@ parts:
     prime:
       - appinfo
 
-  tkinter:
-    after: [appinfo]
-    plugin: nil
-    stage-packages:
-      - python3-tk
-
   deps:
-    after: [tkinter]
+    after: [appinfo]
     plugin: nil
     stage-packages:
       - libnotify-bin
