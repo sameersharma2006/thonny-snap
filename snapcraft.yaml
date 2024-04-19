@@ -20,6 +20,8 @@ apps:
     extensions: [gnome]
     common-id: org.thonny.Thonny
     environment:
+      THONNY_USER_DIR: $SNAP_USER_DATA
+      TMPDIR: $XDG_RUNTIME_DIR
       PYTHONPATH: ${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3.10/site-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
     plugs:
       - home
