@@ -44,7 +44,7 @@ apps:
 parts:
   thonny:
     plugin: nil
-    override-build:
+    override-build: |
       craftctl default
       pip install --prefix=$CRAFT_PART_INSTALL/usr thonny==4.1.4
 
