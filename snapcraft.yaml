@@ -54,7 +54,7 @@ parts:
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.4
     after: [thonny]
-    parse-info: [thonny/packaging/linux/org.thonny.Thonny.appdata.xml]
+    parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     plugin: dump
     override-pull: |
       craftctl default
