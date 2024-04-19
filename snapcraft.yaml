@@ -1,6 +1,6 @@
 name: thonny
 base: core22
-adopt-info: thonny
+adopt-info: appinfo
 grade: stable
 confinement: strict
 compression: lzo
@@ -52,6 +52,7 @@ parts:
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.4
     after: [thonny]
+    parse-info: [thonny/packaging/linux/org.thonny.Thonny.appdata.xml]
     plugin: dump
     override-pull: |
       craftctl default
