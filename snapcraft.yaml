@@ -1,12 +1,14 @@
 name: thonny
-base: core22
+base: core24
 adopt-info: appinfo
 grade: stable
 confinement: strict
 compression: lzo
-architectures:
-  - build-on: amd64
-  - build-on: arm64
+platforms:
+  amd64:
+  arm64:
+    build-on: [amd64, arm64]
+    build-for: [arm64]
 
 slots:
   thonny:
@@ -16,13 +18,11 @@ slots:
 
 apps:
   thonny:
-    command: usr/local/bin/thonny
+    command: bin/thonny
     extensions: [gnome]
     common-id: org.thonny.Thonny
     environment:
-      THONNY_USER_DIR: $SNAP_USER_DATA
-      TMPDIR: $XDG_RUNTIME_DIR
-      PYTHONPATH: ${SNAP}/lib/python3.10/site-packages:${SNAP}/usr/lib/python3.10/site-packages:${SNAP}/usr/local/lib/python3.10/dist-packages
+      PYTHONPATH: ${SNAP}/lib/python3.12/site-packages:${SNAP}/usr/lib/python3.12/site-packages:${SNAP}/usr/local/lib/python3.12/dist-packages
     plugs:
       - home
       - unity7
@@ -36,16 +36,18 @@ apps:
       - hardware-observe
       - system-observe
       - upower-observe
-      - optical-drive
       - raw-usb
       - udisks2
+      - optical-drive
       - removable-media
       - screen-inhibit-control
     desktop: appinfo/org.thonny.Thonny.desktop
 
 parts:
   thonny:
-    plugin: nil
+    source: https://github.com/thonny/thonny.git
+    source-tag: v4.1.4
+    plugin: python
     override-build: |
       craftctl default
       pip install --prefix=$CRAFT_PART_INSTALL/usr thonny==4.1.4
@@ -58,19 +60,13 @@ parts:
     plugin: dump
     override-pull: |
       craftctl default
-      sed -e 's|Exec=/usr/bin/thonny %F|Exec=usr/local/bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
+      sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
       sed -e 's|Icon=thonny|Icon=${SNAP}/appinfo/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
       mkdir appinfo
       cp packaging/linux/org.thonny.Thonny.desktop appinfo
       cp packaging/icons/thonny-256x256.png appinfo
     prime:
       - appinfo
-
-  tkinter:
-    after: [appinfo]
-    plugin: nil
-    stage-packages:
-      - python3-tk
 
   deps:
     after: [tkinter]
