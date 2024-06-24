@@ -83,7 +83,7 @@ parts:
       - usr/bin/notify-send
       - usr/lib/*/libXt.so*
       - usr/lib/*/libXmu.so*
-      - usr/share/zenity
+      - usr/lib/*/libXext.so*
 
   cleanup:
     after: [deps]
