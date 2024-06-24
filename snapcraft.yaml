@@ -7,8 +7,6 @@ compression: lzo
 platforms:
   amd64:
   arm64:
-    build-on: [amd64, arm64]
-    build-for: [arm64]
 
 slots:
   thonny:
@@ -18,7 +16,7 @@ slots:
 
 apps:
   thonny:
-    command: bin/thonny
+    command: usr/local/bin/thonny
     extensions: [gnome]
     common-id: org.thonny.Thonny
     environment:
@@ -45,9 +43,7 @@ apps:
 
 parts:
   thonny:
-    source: https://github.com/thonny/thonny.git
-    source-tag: v4.1.4
-    plugin: python
+    plugin: nil
     override-build: |
       craftctl default
       pip install --prefix=$CRAFT_PART_INSTALL/usr thonny==4.1.4
@@ -60,13 +56,19 @@ parts:
     plugin: dump
     override-pull: |
       craftctl default
-      sed -e 's|Exec=/usr/bin/thonny %F|Exec=bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
+      sed -e 's|Exec=/usr/bin/thonny %F|Exec=/usr/local/bin/thonny %F|' -i packaging/linux/org.thonny.Thonny.desktop
       sed -e 's|Icon=thonny|Icon=${SNAP}/appinfo/thonny-256x256.png|' -i packaging/linux/org.thonny.Thonny.desktop
       mkdir appinfo
       cp packaging/linux/org.thonny.Thonny.desktop appinfo
       cp packaging/icons/thonny-256x256.png appinfo
     prime:
       - appinfo
+
+  tkinter:
+    after: [appinfo]
+    plugin: nil
+    stage-packages:
+      - python3-tk
 
   deps:
     after: [tkinter]
@@ -82,3 +84,13 @@ parts:
       - usr/lib/*/libXt.so*
       - usr/lib/*/libXmu.so*
       - usr/share/zenity
+
+  cleanup:
+    after: [deps]
+    plugin: nil
+    build-snaps: [core24, gnome-46-2404]
+    override-prime: |
+      set -eux
+      for snap in "core24" "gnome-46-2404"; do
+        cd "/snap/$snap/current" && find . -type f,l -exec rm -rf "${CRAFT_PRIME}/{}" \;
+      done
