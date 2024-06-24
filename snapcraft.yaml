@@ -69,6 +69,8 @@ parts:
     plugin: nil
     stage-packages:
       - python3-tk
+    prime:
+      - -usr/lib/libBLTlite.2.5.so*
 
   deps:
     after: [tkinter]
