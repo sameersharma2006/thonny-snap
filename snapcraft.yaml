@@ -1,6 +1,6 @@
 name: thonny
 base: core24
-adopt-info: appinfo
+adopt-info: thonny
 grade: stable
 confinement: strict
 compression: lzo
@@ -20,7 +20,7 @@ apps:
     extensions: [gnome]
     common-id: org.thonny.Thonny
     environment:
-      PYTHONPATH: ${SNAP}/lib/python3.12/site-packages:${SNAP}/usr/lib/python3.12/site-packages:${SNAP}/usr/local/lib/python3.12/dist-packages
+      PYTHONPATH: ${SNAP}/lib/python3.12/site-packages:${SNAP}/usr/lib/python3.12/site-packages:${SNAP}/usr/local/lib/python3.12/dist-packages:${SNAP}/usr/lib/python3.12/tkinter:${SNAP}/usr/lib/python3.12/lib-dynload
     plugs:
       - home
       - unity7
@@ -43,16 +43,15 @@ apps:
 
 parts:
   thonny:
-    plugin: nil
-    override-build: |
-      craftctl default
-      pip install --prefix=$CRAFT_PART_INSTALL/usr thonny==4.1.4
+    source: https://github.com/thonny/thonny.git
+    source-branch: 'master'
+    parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
+    plugin: python
 
   appinfo:
     source: https://github.com/thonny/thonny.git
     source-tag: v4.1.4
     after: [thonny]
-    parse-info: [packaging/linux/org.thonny.Thonny.appdata.xml]
     plugin: dump
     override-pull: |
       craftctl default
@@ -83,16 +82,15 @@ parts:
       - usr/bin/xclip*
       - usr/bin/zenity
       - usr/bin/notify-send
-      - usr/lib/*/libXt.so*
       - usr/lib/*/libXmu.so*
       - usr/lib/*/libXext.so*
 
   cleanup:
     after: [deps]
     plugin: nil
-    build-snaps: [core24, gnome-46-2404]
+    build-snaps: [core24, gnome-46-2404, mesa-2404]
     override-prime: |
       set -eux
-      for snap in "core24" "gnome-46-2404"; do
+      for snap in "core24" "gnome-46-2404" "mesa-2404"; do
         cd "/snap/$snap/current" && find . -type f,l -exec rm -rf "${CRAFT_PRIME}/{}" \;
       done
