@@ -4,6 +4,11 @@ adopt-info: thonny
 grade: stable
 confinement: strict
 compression: lzo
+source-code: https://git.launchpad.net/thonny-snap/tree/snapcraft.yaml?h=bionic
+license: MIT
+issues:
+  - https://bugs.launchpad.net/thonny-snap
+  - https://github.com/sameersharma2006/thonny-snap/issues
 architectures:
   - build-on: amd64
 
@@ -21,6 +26,7 @@ apps:
     environment:
       THONNY_USER_DIR: $SNAP_USER_DATA
       TMPDIR: $XDG_RUNTIME_DIR
+      DISABLE_WAYLAND: 1
     plugs:
       - home
       - unity7
